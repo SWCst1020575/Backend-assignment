@@ -14,7 +14,7 @@ type Ad struct {
 type Condition struct {
 	AgeStart int      `json:"ageStart"`
 	AgeEnd   int      `json:"ageEnd"`
-	Gender   bool     `json:"gender"`
+	Gender   []string `json:"gender"`
 	Country  []string `json:"country"`
 	Platform []string `json:"platform"`
 }

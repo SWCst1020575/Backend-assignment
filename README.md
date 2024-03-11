@@ -13,7 +13,7 @@ $ ./bin/a.out
 
 ## Create table
 * Since the above container doesn't use volume to store data, we have to initiate table at first.
-* Decompose country and platform data to seperate table.
+* Decompose country data to seperate table since the number of countries can be too many.
 * These queries will be done while this application start.
 ```sql
 CREATE TABLE Ad (
@@ -22,15 +22,14 @@ CREATE TABLE Ad (
     StartAt timestamp NOT NULL,
     EndAt timestamp NOT NULL,
     Age int,
-    Gender boolean,
+    Male boolean,
+    Female boolean,
+    PlatformAndroid boolean,
+    PlatformIos boolean,
+    PlatformWeb boolean,
 );
 CREATE TABLE Country (
     ID NOT NULL references Ad(ID),
     Country char(2)
 );
-CREATE TABLE Platform (
-    ID NOT NULL references Ad(ID),
-    Platform char(7)
-);
-
 ```

@@ -51,15 +51,15 @@ const initCreateTableQuery = `CREATE TABLE Ad (
 								StartAt timestamp NOT NULL,
 								EndAt timestamp NOT NULL,
 								Age int,
-								Gender boolean,
+								Male boolean,
+								Female boolean,
+								PlatformAndroid boolean,
+								PlatformIos boolean,
+								PlatformWeb boolean,
 							);
 							CREATE TABLE Country (
     							ID NOT NULL references Ad(ID),
 								Country char(2)
-							);
-							CREATE TABLE Platform (
-    							ID NOT NULL references Ad(ID),
-								Platform char(7)
 							);`
 
 // Check if ad table exists.
