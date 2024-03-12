@@ -18,3 +18,10 @@ type Condition struct {
 	Country  []string `json:"country"`
 	Platform []string `json:"platform"`
 }
+type extendCondition struct {
+	Male            bool
+	Female          bool
+	PlatformAndroid bool
+	PlatformIos     bool
+	PlatformWeb     bool
+}

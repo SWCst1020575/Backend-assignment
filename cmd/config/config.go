@@ -1,6 +1,7 @@
 package config
 
 import (
+	. "dcard-assignment/cmd/utils"
 	"encoding/json"
 	"os"
 )
@@ -17,12 +18,10 @@ func GetDbConfig() *dbConfig {
 	config := dbConfig{}
 	file := "./configs/config.json"
 	data, err := os.ReadFile(file)
-	if err != nil {
-		panic(err)
-	}
+	CheckError(err)
+
 	err = json.Unmarshal(data, &config)
-	if err != nil {
-		panic(err)
-	}
+	CheckError(err)
+
 	return &config
 }

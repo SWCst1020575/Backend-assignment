@@ -2,13 +2,19 @@
 
 ## Set up postgresql with docker
 ```sh
-$ docker run -d --name my-postgres -p 8888:5432 -e POSTGRES_PASSWORD=admin postgres:14-alpine3.17
+docker run -d --name my-postgres -p 8888:5432 -e POSTGRES_PASSWORD=admin postgres:14-alpine3.17
 ```
 
 ## Compile and run
+
 ```sh
-$ make
-$ ./bin/a.out
+make
+./bin/a.out
+```
+or
+```sh
+go build
+./dcard-assignment
 ```
 
 ## Create table
@@ -21,7 +27,8 @@ CREATE TABLE Ad (
     Title text NOT NULL,
     StartAt timestamp NOT NULL,
     EndAt timestamp NOT NULL,
-    Age int,
+    AgeStart int,
+    AgeEnd int,
     Male boolean,
     Female boolean,
     PlatformAndroid boolean,
