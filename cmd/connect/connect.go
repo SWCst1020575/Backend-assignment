@@ -28,7 +28,7 @@ func DBconnect() {
 func DBclose() {
 	err := dbConnection.Close()
 	CheckError(err)
-	fmt.Println("Connection is closed.")
+	fmt.Println("Database connection is closed.")
 }
 
 // Function: Get database connection
@@ -37,7 +37,7 @@ func GetDBconnection() *sql.DB {
 }
 
 // Constant: The query string to create table in database.
-const initCreateTableQuery = `CREATE TABLE Ad (
+const initCreateTableQuery1 = `CREATE TABLE Ad (
     							ID SERIAL PRIMARY KEY,
     							Title text NOT NULL,
 								StartAt timestamp NOT NULL,
@@ -48,17 +48,26 @@ const initCreateTableQuery = `CREATE TABLE Ad (
 								Female boolean,
 								PlatformAndroid boolean,
 								PlatformIos boolean,
-								PlatformWeb boolean,
-							);
-							CREATE TABLE Country (
-    							ID NOT NULL references Ad(ID),
+								PlatformWeb boolean
+							);`
+const initCreateTableQuery2 = `CREATE TABLE Country (
+    							ID int NOT NULL references Ad(ID),
 								Country char(2)
 							);`
 
 // Function: Check if ad table exists.
 func checkTableExist() {
-	_, check := dbConnection.Query("SELECT * FROM ad;")
+	_, check := dbConnection.Query("SELECT * FROM Ad;")
 	if check != nil {
-		dbConnection.Exec(initCreateTableQuery)
+		_, err := dbConnection.Exec(initCreateTableQuery1)
+		CheckError(err)
+
+		fmt.Println("Create ad table.")
+	}
+	_, check = dbConnection.Query("SELECT * FROM Country;")
+	if check != nil {
+		_, err := dbConnection.Exec(initCreateTableQuery2)
+		CheckError(err)
+		fmt.Println("Create ad table.")
 	}
 }

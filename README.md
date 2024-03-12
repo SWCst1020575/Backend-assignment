@@ -40,3 +40,20 @@ CREATE TABLE Country (
     Country char(2)
 );
 ```
+
+## Post
+```sh
+curl -X POST -H "Content-Type: application/json" "http://localhost:3000/api/v1/ad" \
+-d '{"title":"AD 55", 
+    "startAt":"2023-12-10T03:00:00.000Z",
+    "endAt":"2023-12-31T16:00:00.000Z",
+    "conditions": {
+        
+            "ageStart": 20,
+            "ageEnd": 30,
+            "country": ["TW", "JP"],
+            "platform": ["android", "ios"]
+        
+    }  
+}'
+```

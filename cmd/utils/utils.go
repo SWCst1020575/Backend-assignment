@@ -10,8 +10,11 @@ func CheckError(err error) {
 		panic(err)
 	}
 }
+
+// Transection rollback if error occur.
 func TransectionCheckError(err error, tx *sql.Tx) bool {
 	if err != nil {
+		fmt.Println(err.Error())
 		err = tx.Rollback()
 		CheckError(err)
 		fmt.Println("Transection failed.")

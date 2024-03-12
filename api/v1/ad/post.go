@@ -42,7 +42,7 @@ func Post(writer http.ResponseWriter, request *http.Request) {
 func dbInsert(ad *Ad) bool {
 	// Initialize query string
 	const adColumns = "Title, StartAt, EndAt, AgeStart, AgeEnd, Male, Female, PlatformAndroid, PlatformIos, PlatformWeb"
-	const queryValue = "?, ?, ?, ?, ?, ?, ?, ?, ?, ?"
+	const queryValue = "$1, $2, $3, $4, $5, $6, $7, $8, $9, $10"
 	query := fmt.Sprintf("INSERT INTO Ad (%s) VALUES (%s) RETURNING ID;", adColumns, queryValue)
 	extendCondition := getExtendCondition(ad)
 
@@ -55,21 +55,24 @@ func dbInsert(ad *Ad) bool {
 
 	// Insert new ad
 	var newAdID int
-	err = db.QueryRow(query, ad.Title, ad.StartAt, ad.EndAt, ad.Conditions.AgeStart, ad.Conditions.AgeEnd,
+	err = tx.QueryRow(query, ad.Title, ad.StartAt, ad.EndAt, ad.Conditions.AgeStart, ad.Conditions.AgeEnd,
 		extendCondition.Male, extendCondition.Female,
 		extendCondition.PlatformAndroid, extendCondition.PlatformIos, extendCondition.PlatformWeb).Scan(&newAdID)
 	if !TransectionCheckError(err, tx) {
+		fmt.Println("Ad insert error.")
 		return false
 	}
 
 	// Insert countries in another table
 	if !handleCountryInsert(ad.Conditions.Country, newAdID, tx) {
+		fmt.Println("Country insert error.")
 		return false
 	}
 
 	// Transection commit
 	err = tx.Commit()
 	if !TransectionCheckError(err, tx) {
+		fmt.Println("Commit error.")
 		return false
 	}
 
@@ -92,7 +95,7 @@ func postFormatError(w http.ResponseWriter) {
 
 // Function: Parse gender and platform to boolean variable.
 func getExtendCondition(ad *Ad) *extendCondition {
-	extend := extendCondition{}
+	extend := extendCondition{false, false, false, false, false}
 	for _, gender := range ad.Conditions.Gender {
 		switch gender {
 		case "M":
@@ -115,15 +118,17 @@ func getExtendCondition(ad *Ad) *extendCondition {
 }
 
 func handleCountryInsert(countrys []string, id int, tx *sql.Tx) bool {
-	db := connect.GetDBconnection()
-	data := []interface{}{}
-	query := "INSERT INTO Country(ID, Country) VALUES "
-	for _, country := range countrys {
-		query += "(?, ?, ?),"
-		data = append(data, id, country)
-	}
-	data = data[0 : len(data)-1]
 
-	_, err := db.Exec(query, data)
-	return TransectionCheckError(err, tx)
+	query := "INSERT INTO Country (ID, Country) VALUES ($1, $2);"
+	stmt, err := tx.Prepare(query)
+	if !TransectionCheckError(err, tx) {
+		return false
+	}
+	for _, country := range countrys {
+		_, err := stmt.Exec(id, country)
+		if !TransectionCheckError(err, tx) {
+			return false
+		}
+	}
+	return true
 }
