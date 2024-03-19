@@ -18,6 +18,18 @@ type Condition struct {
 	Country  []string `json:"country"`
 	Platform []string `json:"platform"`
 }
+
+// Define ad get method interface
+type SearchAd struct {
+	Offset   int    `json:"offset"`
+	Limit    int    `json:"limit"`
+	Age      int    `json:"age"`
+	Gender   string `json:"gender"`
+	Country  string `json:"country"`
+	Platform string `json:"platform"`
+}
+
+// For translation from string to boolean
 type extendCondition struct {
 	Male            bool
 	Female          bool

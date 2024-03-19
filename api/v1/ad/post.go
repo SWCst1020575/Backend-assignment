@@ -26,13 +26,15 @@ func Post(writer http.ResponseWriter, request *http.Request) {
 		return
 	}
 
-	response, err := json.Marshal(newAd)
+	resp := make(map[string]string)
+	resp["message"] = "Success"
+	jsonResp, err := json.Marshal(resp)
 	CheckError(err)
 
 	// Return success
 	writer.Header().Set("Content-Type", "application/json")
 	writer.WriteHeader(http.StatusOK)
-	_, err = writer.Write(response)
+	_, err = writer.Write(jsonResp)
 	CheckError(err)
 
 }
@@ -77,7 +79,6 @@ func dbInsert(ad *Ad) bool {
 	}
 
 	fmt.Println("Transection commit success.")
-	fmt.Println(query)
 
 	return true
 }

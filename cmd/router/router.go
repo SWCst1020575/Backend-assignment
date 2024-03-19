@@ -10,5 +10,6 @@ func NewRouter() *mux.Router {
 	// TODO: Design api router (/api/v1/ad) post and get.
 	r := mux.NewRouter()
 	r.HandleFunc("/api/v1/ad", ad.Post).Methods("POST")
+	r.HandleFunc("/api/v1/ad", ad.Get).Methods("GET")
 	return r
 }

@@ -37,7 +37,8 @@ CREATE TABLE Ad (
 );
 CREATE TABLE Country (
     ID NOT NULL references Ad(ID),
-    Country char(2)
+    Country char(2),
+    PRIMARY KEY (ID, Country)
 );
 ```
 
@@ -56,4 +57,10 @@ curl -X POST -H "Content-Type: application/json" "http://localhost:3000/api/v1/a
         
     }  
 }'
+```
+## Get
+```sh
+curl -X GET -H "Content-Type: application/json" \
+"http://localhost:3000/api/v1/ad?offset=10&limit=3&age=24&gender=F&country=TW&platform=ios"
+
 ```
