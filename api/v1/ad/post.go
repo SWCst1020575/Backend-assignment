@@ -3,22 +3,23 @@ package ad
 import (
 	"database/sql"
 	"dcard-assignment/cmd/connect"
-	. "dcard-assignment/cmd/utils"
+	"dcard-assignment/cmd/utils"
 	"encoding/json"
 	"fmt"
 	"io"
 	"net/http"
+	"strings"
 )
 
 // Function: Handle post method of ad
 func Post(writer http.ResponseWriter, request *http.Request) {
 	defer request.Body.Close()
 	body, err := io.ReadAll(request.Body)
-	CheckError(err)
+	utils.CheckError(err)
 
 	var newAd Ad
 	err = json.Unmarshal(body, &newAd)
-	CheckError(err)
+	utils.CheckError(err)
 
 	success := dbInsert(&newAd)
 	if !success {
@@ -29,13 +30,13 @@ func Post(writer http.ResponseWriter, request *http.Request) {
 	resp := make(map[string]string)
 	resp["message"] = "Success"
 	jsonResp, err := json.Marshal(resp)
-	CheckError(err)
+	utils.CheckError(err)
 
 	// Return success
 	writer.Header().Set("Content-Type", "application/json")
 	writer.WriteHeader(http.StatusOK)
 	_, err = writer.Write(jsonResp)
-	CheckError(err)
+	utils.CheckError(err)
 
 }
 
@@ -47,11 +48,14 @@ func dbInsert(ad *Ad) bool {
 	const queryValue = "$1, $2, $3, $4, $5, $6, $7, $8, $9, $10"
 	query := fmt.Sprintf("INSERT INTO Ad (%s) VALUES (%s) RETURNING ID;", adColumns, queryValue)
 	extendCondition := getExtendCondition(ad)
+	if !checkCountryValid(ad) {
+		return false
+	}
 
 	// Start transection
 	db := connect.GetDBconnection()
 	tx, err := db.Begin()
-	if !TransectionCheckError(err, tx) {
+	if !utils.TransectionCheckError(err, tx) {
 		return false
 	}
 
@@ -60,7 +64,7 @@ func dbInsert(ad *Ad) bool {
 	err = tx.QueryRow(query, ad.Title, ad.StartAt, ad.EndAt, ad.Conditions.AgeStart, ad.Conditions.AgeEnd,
 		extendCondition.Male, extendCondition.Female,
 		extendCondition.PlatformAndroid, extendCondition.PlatformIos, extendCondition.PlatformWeb).Scan(&newAdID)
-	if !TransectionCheckError(err, tx) {
+	if !utils.TransectionCheckError(err, tx) {
 		fmt.Println("Ad insert error.")
 		return false
 	}
@@ -73,7 +77,7 @@ func dbInsert(ad *Ad) bool {
 
 	// Transection commit
 	err = tx.Commit()
-	if !TransectionCheckError(err, tx) {
+	if !utils.TransectionCheckError(err, tx) {
 		fmt.Println("Commit error.")
 		return false
 	}
@@ -90,7 +94,7 @@ func postFormatError(w http.ResponseWriter) {
 	resp := make(map[string]string)
 	resp["message"] = "Bad Request"
 	jsonResp, err := json.Marshal(resp)
-	CheckError(err)
+	utils.CheckError(err)
 	w.Write(jsonResp)
 }
 
@@ -99,14 +103,15 @@ func getExtendCondition(ad *Ad) *extendCondition {
 	extend := extendCondition{false, false, false, false, false}
 	for _, gender := range ad.Conditions.Gender {
 		switch gender {
-		case "M":
+		case "M", "m":
 			extend.Male = true
-		case "F":
+		case "F", "f":
 			extend.Female = true
 		}
 	}
 	for _, platform := range ad.Conditions.Platform {
-		switch platform {
+		lowerPlatform := strings.ToLower(platform)
+		switch lowerPlatform {
 		case "android":
 			extend.PlatformAndroid = true
 		case "ios":
@@ -118,16 +123,26 @@ func getExtendCondition(ad *Ad) *extendCondition {
 	return &extend
 }
 
+// Function: Insert country data in decomposed table.
 func handleCountryInsert(countrys []string, id int, tx *sql.Tx) bool {
-
 	query := "INSERT INTO Country (ID, Country) VALUES ($1, $2);"
 	stmt, err := tx.Prepare(query)
-	if !TransectionCheckError(err, tx) {
+	if !utils.TransectionCheckError(err, tx) {
 		return false
 	}
 	for _, country := range countrys {
 		_, err := stmt.Exec(id, country)
-		if !TransectionCheckError(err, tx) {
+		if !utils.TransectionCheckError(err, tx) {
+			return false
+		}
+	}
+	return true
+}
+
+// Function: Check if country is exactly two characters to prevent invalid data inserting.
+func checkCountryValid(ad *Ad) bool {
+	for _, country := range ad.Conditions.Country {
+		if len(country) != 2 {
 			return false
 		}
 	}

@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"net/url"
 	"strconv"
+	"strings"
 )
 
 // Function: Handle get method of ad
@@ -24,10 +25,12 @@ func Get(writer http.ResponseWriter, request *http.Request) {
 	fmt.Println(search)
 }
 
+// Function: Parse str to int and block invalid request, and prevent sql injection as well
 func parseSearch(search *url.Values) *SearchAd {
 	s := SearchAd{}
 	isParameterEmpty := false
 	for key, elements := range *search {
+		lowerElement := strings.ToLower(elements[0])
 		switch key {
 		case "offset":
 			val, err := strconv.Atoi(elements[0])
@@ -48,11 +51,20 @@ func parseSearch(search *url.Values) *SearchAd {
 			}
 			s.Limit = val
 		case "gender":
-			s.Gender = elements[0]
+			s.Gender = lowerElement
+			if s.Gender != "f" && s.Gender != "m" {
+				return nil
+			}
 		case "country":
-			s.Country = elements[0]
+			s.Country = lowerElement
+			if len(s.Country) != 2 {
+				return nil
+			}
 		case "platform":
-			s.Platform = elements[0]
+			s.Platform = lowerElement
+			if s.Platform != "ios" && s.Platform != "android" && s.Platform != "web" {
+				return nil
+			}
 		}
 		isParameterEmpty = true
 	}
