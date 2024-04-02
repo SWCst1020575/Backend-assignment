@@ -9,6 +9,8 @@ import (
 	"io"
 	"net/http"
 	"strings"
+
+	"github.com/biter777/countries"
 )
 
 // Function: Handle post method of ad
@@ -44,6 +46,10 @@ func Post(writer http.ResponseWriter, request *http.Request) {
 // return: false, if request format is wrong.
 func dbInsert(ad *Ad) bool {
 	// Initialize query string
+
+	if !checkNotNull(ad) {
+		return false
+	}
 	const adColumns = "Title, StartAt, EndAt, AgeStart, AgeEnd, Male, Female, PlatformAndroid, PlatformIos, PlatformWeb"
 	const queryValue = "$1, $2, $3, $4, $5, $6, $7, $8, $9, $10"
 	query := fmt.Sprintf("INSERT INTO Ad (%s) VALUES (%s) RETURNING ID;", adColumns, queryValue)
@@ -92,7 +98,7 @@ func postFormatError(w http.ResponseWriter) {
 	w.WriteHeader(http.StatusBadRequest)
 	w.Header().Set("Content-Type", "application/json")
 	resp := make(map[string]string)
-	resp["message"] = "Bad Request"
+	resp["message"] = "Failed"
 	jsonResp, err := json.Marshal(resp)
 	utils.CheckError(err)
 	w.Write(jsonResp)
@@ -130,6 +136,7 @@ func handleCountryInsert(countrys []string, id int, tx *sql.Tx) bool {
 	if !utils.TransectionCheckError(err, tx) {
 		return false
 	}
+	countrys = removeDuplicatedCountries(countrys)
 	for _, country := range countrys {
 		_, err := stmt.Exec(id, country)
 		if !utils.TransectionCheckError(err, tx) {
@@ -139,12 +146,41 @@ func handleCountryInsert(countrys []string, id int, tx *sql.Tx) bool {
 	return true
 }
 
-// Function: Check if country is exactly two characters to prevent invalid data inserting.
+// Function: Check if country is exactly two characters and if exist in ISO 3166 to prevent invalid data inserting.
 func checkCountryValid(ad *Ad) bool {
 	for _, country := range ad.Conditions.Country {
 		if len(country) != 2 {
 			return false
 		}
+		if !countries.ByName(country).IsValid() {
+			return false
+		}
 	}
 	return true
+}
+
+func checkNotNull(ad *Ad) bool {
+	if ad.Title == "" {
+		return false
+	}
+	if ad.StartAt.IsZero() {
+		return false
+	}
+	if ad.EndAt.IsZero() {
+		return false
+	}
+	return true
+}
+
+// Function: Remove duplicated countries.
+func removeDuplicatedCountries(countrys []string) []string {
+	allKeys := make(map[string]bool)
+	newListofCountries := []string{}
+	for _, item := range countrys {
+		if _, value := allKeys[item]; !value {
+			allKeys[item] = true
+			newListofCountries = append(newListofCountries, item)
+		}
+	}
+	return newListofCountries
 }

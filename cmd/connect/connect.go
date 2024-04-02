@@ -62,12 +62,12 @@ func checkTableExist() {
 		_, err := dbConnection.Exec(initCreateTableQuery1)
 		CheckError(err)
 
-		fmt.Println("Create ad table.")
+		fmt.Println("Create Ad table.")
 	}
 	_, check = dbConnection.Query("SELECT * FROM Country;")
 	if check != nil {
 		_, err := dbConnection.Exec(initCreateTableQuery2)
 		CheckError(err)
-		fmt.Println("Create ad table.")
+		fmt.Println("Create Country table.")
 	}
 }

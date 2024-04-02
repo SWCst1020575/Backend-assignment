@@ -1,0 +1,242 @@
+{
+    "test": [
+        {
+            "title": "AD 55",
+            "startAt": "2023-12-10T03:00:00.000Z",
+            "endAt": "2023-12-31T16:00:00.000Z",
+            "conditions": {
+                "ageStart": 20,
+                "ageEnd": 30,
+                "country": [
+                    "TW",
+                    "JP"
+                ],
+                "platform": [
+                    "android",
+                    "ios"
+                ]
+            },
+            "output": "Success"
+        },
+        {
+            "conditions": {
+                "ageStart": 20,
+                "ageEnd": 30,
+                "country": [
+                    "TW"
+                ],
+                "platform": [
+                    "web"
+                ]
+            },
+            "output": "Failed"
+        },
+        {
+            "title": "AD 2",
+            "conditions": {
+                "ageStart": 20,
+                "ageEnd": 30,
+                "country": [
+                    "TW"
+                ],
+                "platform": [
+                    "web"
+                ]
+            },
+            "output": "Failed"
+        },
+        {
+            "startAt": "2023-12-10T03:00:00.000Z",
+            "conditions": {
+                "ageStart": 20,
+                "ageEnd": 30,
+                "country": [
+                    "TW"
+                ],
+                "platform": [
+                    "web"
+                ]
+            },
+            "output": "Failed"
+        },
+        {
+            "endAt": "2023-12-31T16:00:00.000Z",
+            "conditions": {
+                "ageStart": 20,
+                "ageEnd": 30,
+                "country": [
+                    "TW"
+                ],
+                "platform": [
+                    "web"
+                ]
+            },
+            "output": "Failed"
+        },
+        {
+            "title": "AD 3",
+            "startAt": "2023-12-10T03:00:00.000Z",
+            "endAt": "2023-12-31T16:00:00.000Z",
+            "conditions": {
+                "ageEnd": 30,
+                "country": [
+                    "TW",
+                    "JP"
+                ],
+                "platform": [
+                    "android",
+                    "ios"
+                ]
+            },
+            "output": "Success"
+        },
+        {
+            "title": "AD 4",
+            "startAt": "2023-12-10T03:00:00.000Z",
+            "endAt": "2023-12-31T16:00:00.000Z",
+            "conditions": {
+                "ageStart": 20,
+                "country": [
+                    "TW",
+                    "JP"
+                ],
+                "platform": [
+                    "android",
+                    "ios"
+                ]
+            },
+            "output": "Success"
+        },
+        {
+            "title": "AD 5",
+            "startAt": "2023-12-10T03:00:00.000Z",
+            "endAt": "2023-12-31T16:00:00.000Z",
+            "conditions": {
+                "ageStart": 20,
+                "ageEnd": 30,
+                "platform": [
+                    "android",
+                    "ios"
+                ]
+            },
+            "output": "Success"
+        },
+        {
+            "title": "AD 6",
+            "startAt": "2023-12-10T03:00:00.000Z",
+            "endAt": "2023-12-31T16:00:00.000Z",
+            "conditions": {
+                "ageStart": 20,
+                "ageEnd": 30,
+                "country": [
+                    "TW",
+                    "JP"
+                ]
+            },
+            "output": "Success"
+        },
+        {
+            "title": "AD 7",
+            "startAt": "2023-12-10T03:00:00.000Z",
+            "endAt": "2023-12-31T16:00:00.000Z",
+            "conditions": {
+                "ageStart": 20,
+                "ageEnd": 30,
+                "country": [
+                    "TW",
+                    "JP"
+                ],
+                "platform": [
+                    "android",
+                    "ios",
+                    "web"
+                ]
+            },
+            "output": "Success"
+        },
+        {
+            "title": "AD 8",
+            "startAt": "2023-12-10T03:00:00.000Z",
+            "endAt": "2023-12-31T16:00:00.000Z",
+            "conditions": {
+                "ageStart": 20,
+                "ageEnd": 80,
+                "country": [
+                    "TW",
+                    "JP",
+                    "ABC"
+                ],
+                "platform": [
+                    "android",
+                    "ios"
+                ]
+            },
+            "output": "Failed"
+        },
+        {
+            "title": "AD 9",
+            "startAt": "2023-12-10T03:00:00.000Z",
+            "endAt": "2023-12-31T16:00:00.000Z",
+            "conditions": {
+                "ageStart": 20,
+                "ageEnd": 80,
+                "country": [
+                    "TW",
+                    "JP",
+                    "CN",
+                    "KR"
+                ],
+                "platform": [
+                    "android"
+                ]
+            },
+            "output": "Success"
+        },
+        {
+            "title": "AD 10",
+            "startAt": "2023-12-10T03:00:00.000Z",
+            "endAt": "2023-12-31T16:00:00.000Z",
+            "conditions": {
+                "ageStart": -20,
+                "ageEnd": 80,
+                "country": [
+                    "TW",
+                    "JP",
+                    "CN",
+                    "KR",
+                    "US"
+                ],
+                "platform": [
+                    "android"
+                ]
+            },
+            "output": "Success"
+        },
+        {
+            "title": "AD 11",
+            "startAt": "2023-12-10T03:00:00.000Z",
+            "endAt": "2023-12-31T16:00:00.000Z",
+            "conditions": {
+                "ageStart": 20,
+                "ageEnd": 80,
+                "country": [
+                    "TW",
+                    "JP",
+                    "CN",
+                    "KR",
+                    "AB"
+                ],
+                "platform": [
+                    "android"
+                ]
+            },
+            "output": "Failed"
+        },
+        {
+            "title": "AD 12",
+            "startAt": "2023-12-10T03:00:00.000Z",
+            "endAt": "2023-12-31T16:00:00.000Z",
+            "output": "Success"
+        }
+    ]
+}

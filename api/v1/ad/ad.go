@@ -11,6 +11,7 @@ type Ad struct {
 	EndAt      time.Time `json:"endAt"`
 	Conditions Condition `json:"conditions"`
 }
+
 type Condition struct {
 	AgeStart int      `json:"ageStart"`
 	AgeEnd   int      `json:"ageEnd"`

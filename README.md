@@ -1,5 +1,13 @@
 # Dcard backend assignment
 
+## Test
+### Post
+run
+```sh
+make test_post
+```
+to test if the post method work correctly.
+
 ## Set up postgresql with docker
 ```sh
 docker run -d --name my-postgres -p 8888:5432 -e POSTGRES_PASSWORD=admin postgres:14-alpine3.17

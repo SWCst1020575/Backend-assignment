@@ -7,3 +7,6 @@ build:
 
 clean:
 	rm -rf bin
+
+test_post:
+	go test -v dcard-assignment/test/api/v1/ad

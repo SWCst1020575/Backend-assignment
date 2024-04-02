@@ -8,6 +8,8 @@ import (
 	"net/url"
 	"strconv"
 	"strings"
+
+	"github.com/biter777/countries"
 )
 
 // Function: Handle get method of ad
@@ -58,6 +60,9 @@ func parseSearch(search *url.Values) *SearchAd {
 		case "country":
 			s.Country = lowerElement
 			if len(s.Country) != 2 {
+				return nil
+			}
+			if !countries.ByName(s.Country).IsValid() {
 				return nil
 			}
 		case "platform":
