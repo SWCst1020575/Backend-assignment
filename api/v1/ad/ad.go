@@ -38,3 +38,12 @@ type extendCondition struct {
 	PlatformIos     bool
 	PlatformWeb     bool
 }
+
+type getResponseData struct {
+	Title string    `json:"title"`
+	EndAt time.Time `json:"endAt"`
+}
+
+type getResponse struct {
+	Items []getResponseData `json:"items"`
+}

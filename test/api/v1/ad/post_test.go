@@ -58,12 +58,12 @@ func getAdType(adTest *AdTest) *Ad {
 // Function: Read testing data from json file.
 func getTestData() []AdTest {
 	file := "post.json"
-	testData := AdTestRead{}
+	testData := []AdTest{}
 
 	data, err := os.ReadFile(file)
 	utils.CheckError(err)
 
 	err = json.Unmarshal(data, &testData)
 	utils.CheckError(err)
-	return testData.Test
+	return testData
 }

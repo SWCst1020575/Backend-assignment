@@ -43,15 +43,6 @@ type SearchAd struct {
 	Platform string `json:"platform"`
 }
 
-// For translation from string to boolean
-type extendCondition struct {
-	Male            bool
-	Female          bool
-	PlatformAndroid bool
-	PlatformIos     bool
-	PlatformWeb     bool
-}
-
 type responseMessage struct {
 	Msg string `json:"message"`
 }

@@ -14,6 +14,4 @@ func main() {
 	err := http.ListenAndServe(":3000", r)
 	utils.CheckError(err)
 
-	connect.DBclose()
-
 }

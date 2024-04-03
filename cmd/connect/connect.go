@@ -25,11 +25,6 @@ func DBconnect() {
 	dbConnection = db
 	checkTableExist()
 }
-func DBclose() {
-	err := dbConnection.Close()
-	CheckError(err)
-	fmt.Println("Database connection is closed.")
-}
 
 // Function: Get database connection
 func GetDBconnection() *sql.DB {
