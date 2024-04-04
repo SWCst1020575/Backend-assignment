@@ -54,10 +54,9 @@ func Get(writer http.ResponseWriter, request *http.Request) {
 
 // Function: Parse str to int and block invalid request, and prevent sql injection as well
 func parseSearch(search *url.Values) *SearchAd {
-	s := SearchAd{}
+	s := SearchAd{0, 0, 0, "", "", ""}
 	isParameterEmpty := false
-	isOffsetExist := false
-	isLimitExist := false
+
 	for key, elements := range *search {
 		lowerElement := strings.ToLower(elements[0])
 		switch key {
@@ -66,15 +65,14 @@ func parseSearch(search *url.Values) *SearchAd {
 			if err != nil {
 				return nil
 			}
-			isOffsetExist = true
 			s.Offset = val
 		case "age":
 			val, err := strconv.Atoi(elements[0])
 			if err != nil {
 				return nil
 			}
-			isLimitExist = true
 			s.Age = val
+
 		case "limit":
 			val, err := strconv.Atoi(elements[0])
 			if err != nil {
@@ -102,7 +100,7 @@ func parseSearch(search *url.Values) *SearchAd {
 		}
 		isParameterEmpty = true
 	}
-	if !isParameterEmpty || !isLimitExist || !isOffsetExist {
+	if !isParameterEmpty || s.Offset == 0 || s.Limit == 0 {
 		return nil
 	}
 	return &s
@@ -123,21 +121,26 @@ func getFormatError(w http.ResponseWriter) {
 func parseQuery(search *SearchAd) string {
 	condition := "WHERE NOW()>startat"
 	if search.Age != 0 {
-		condition += fmt.Sprintf(" AND A.agestart <= %d AND A.ageend >= %d", search.Age, search.Age)
+		condition += fmt.Sprintf(" AND ((A.agestart <= %d AND A.ageend >= %d) OR (A.agestart = 0 AND A.ageend = 0))", search.Age, search.Age)
 	}
 	if search.Country != "" {
-		condition += fmt.Sprintf(" AND C.country ILIKE '%s'", search.Country)
+		condition += fmt.Sprintf(" AND ((C.country ILIKE '%s') OR (C.country IS NULL))", search.Country)
 	}
 	if search.Platform != "" {
 		platform := "platform" + search.Platform
-		condition += fmt.Sprintf(" AND A.%s = true", platform)
+		condition += fmt.Sprintf(" AND (A.%s = true OR (A.platformandroid = false AND A.platformios = false AND A.platformweb = false))", platform)
 	}
 
 	if search.Gender == "m" {
-		condition += " AND A.male = true"
+		condition += " AND (A.male = true OR (A.male = false AND a.female = false))"
 	} else if search.Gender == "f" {
-		condition += " AND A.female = true"
+		condition += " AND (A.female = true OR (A.male = false AND a.female = false))"
 	}
-	query := fmt.Sprintf("SELECT A.title, A.endat FROM Ad A JOIN Country C ON C.id = A.id %s ORDER BY A.endat ASC LIMIT %d OFFSET %d;", condition, search.Limit, search.Offset)
+	var query string
+	if search.Country != "" {
+		query = fmt.Sprintf("SELECT A.title, A.endat FROM Ad A JOIN Country C ON C.id = A.id %s ORDER BY A.endat ASC LIMIT %d OFFSET %d;", condition, search.Limit, search.Offset)
+	} else {
+		query = fmt.Sprintf("SELECT A.title, A.endat FROM Ad A %s ORDER BY A.endat ASC LIMIT %d OFFSET %d;", condition, search.Limit, search.Offset)
+	}
 	return query
 }

@@ -12,8 +12,8 @@ type Ad struct {
 	Conditions *Condition `json:"conditions,omitempty"`
 }
 
-// Define ad information for testing
-type AdTest struct {
+// Define reading testing data strcture for post testing
+type AdPostTest struct {
 	Title      string     `json:"title,omitempty"`
 	StartAt    time.Time  `json:"startAt,omitempty"`
 	EndAt      time.Time  `json:"endAt,omitempty"`
@@ -21,8 +21,15 @@ type AdTest struct {
 	Output     string     `json:"output,omitempty"`
 }
 
-type AdTestRead struct {
-	Test []AdTest `json:"test"`
+// Define reading testing data strctur for get testing
+type AdGetTest struct {
+	Offset   int         `json:"offset,omitempty"`
+	Limit    int         `json:"limit,omitempty"`
+	Age      int         `json:"age,omitempty"`
+	Gender   string      `json:"gender,omitempty"`
+	Country  string      `json:"country,omitempty"`
+	Platform string      `json:"platform,omitempty"`
+	Output   getResponse `json:"output,omitempty"`
 }
 
 type Condition struct {
@@ -35,14 +42,23 @@ type Condition struct {
 
 // Define ad get method interface
 type SearchAd struct {
-	Offset   int    `json:"offset"`
-	Limit    int    `json:"limit"`
-	Age      int    `json:"age"`
-	Gender   string `json:"gender"`
-	Country  string `json:"country"`
-	Platform string `json:"platform"`
+	Offset   int    `json:"offset,omitempty"`
+	Limit    int    `json:"limit,omitempty"`
+	Age      int    `json:"age,omitempty"`
+	Gender   string `json:"gender,omitempty"`
+	Country  string `json:"country,omitempty"`
+	Platform string `json:"platform,omitempty"`
 }
 
 type responseMessage struct {
 	Msg string `json:"message"`
+}
+
+type getResponseData struct {
+	Title string    `json:"title"`
+	EndAt time.Time `json:"endAt"`
+}
+
+type getResponse struct {
+	Items []getResponseData `json:"items"`
 }

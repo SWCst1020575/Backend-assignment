@@ -14,7 +14,7 @@ import (
 )
 
 func TestPost(t *testing.T) {
-	testData := getTestData()
+	testData := getPostTestData()
 
 	for _, data := range testData {
 		expectedOutput := data.Output
@@ -46,7 +46,7 @@ func TestPost(t *testing.T) {
 }
 
 // Function: Remove output field to match ad type.
-func getAdType(adTest *AdTest) *Ad {
+func getAdType(adTest *AdPostTest) *Ad {
 	requestAd := Ad{}
 	requestAd.Title = adTest.Title
 	requestAd.StartAt = adTest.StartAt
@@ -56,9 +56,9 @@ func getAdType(adTest *AdTest) *Ad {
 }
 
 // Function: Read testing data from json file.
-func getTestData() []AdTest {
+func getPostTestData() []AdPostTest {
 	file := "post.json"
-	testData := []AdTest{}
+	testData := []AdPostTest{}
 
 	data, err := os.ReadFile(file)
 	utils.CheckError(err)

@@ -57,7 +57,9 @@ func dbInsert(ad *Ad) bool {
 	if !checkCountryValid(ad) {
 		return false
 	}
-
+	if !checkAgeValid(ad) {
+		return false
+	}
 	// Start transection
 	db := connect.GetDBconnection()
 	tx, err := db.Begin()
@@ -170,6 +172,18 @@ func checkNotNull(ad *Ad) bool {
 		return false
 	}
 	return true
+}
+
+// Function: AgeStart, AgeEnd must be both set or both unset, and AgeEnd > AgeStart
+func checkAgeValid(ad *Ad) bool {
+	if ad.Conditions.AgeStart == 0 && ad.Conditions.AgeEnd != 0 {
+		return false
+	}
+	if ad.Conditions.AgeStart != 0 && ad.Conditions.AgeEnd == 0 {
+		return false
+	}
+
+	return ad.Conditions.AgeEnd >= ad.Conditions.AgeStart
 }
 
 // Function: Remove duplicated countries.

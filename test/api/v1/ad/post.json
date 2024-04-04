@@ -87,7 +87,7 @@
                 "ios"
             ]
         },
-        "output": "Success"
+        "output": "Failed"
     },
     {
         "title": "AD 4",
@@ -104,7 +104,7 @@
                 "ios"
             ]
         },
-        "output": "Success"
+        "output": "Failed"
     },
     {
         "title": "AD 5",
@@ -235,6 +235,42 @@
         "title": "AD 12",
         "startAt": "2023-12-10T03:00:00.000Z",
         "endAt": "2023-12-31T15:00:00.000Z",
+        "output": "Success"
+    },
+    {
+        "title": "AD 13",
+        "startAt": "2023-12-10T03:00:00.000Z",
+        "endAt": "2023-12-31T14:00:00.000Z",
+        "conditions": {
+            "ageStart": 80,
+            "ageEnd": 20
+        },
+        "output": "Failed"
+    },
+    {
+        "title": "AD 14",
+        "startAt": "2023-12-10T03:00:00.000Z",
+        "endAt": "2023-12-31T14:00:00.000Z",
+        "conditions": {
+            "ageStart": 30,
+            "ageEnd": 30
+        },
+        "output": "Success"
+    },
+    {
+        "title": "AD 15",
+        "startAt": "2023-12-10T03:00:00.000Z",
+        "endAt": "2023-12-31T14:00:00.000Z",
+        "conditions": {
+            "country": [
+                "TW",
+                "TW"
+            ],
+            "platform": [
+                "android",
+                "android"
+            ]
+        },
         "output": "Success"
     }
 ]
