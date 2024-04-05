@@ -20,7 +20,7 @@ import (
 const AD_TESTING_DATA_FILE = "adTestingData.json"
 
 // False when data has been in database already
-const IS_DATA_PREPARE = false
+const IS_DATA_PREPARE = true
 
 func TestGet(t *testing.T) {
 	dataPrepare()
