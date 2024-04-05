@@ -138,7 +138,7 @@ func parseQuery(search *SearchAd) string {
 	}
 	var query string
 	if search.Country != "" {
-		query = fmt.Sprintf("SELECT A.title, A.endat FROM Ad A JOIN Country C ON C.id = A.id %s ORDER BY A.endat ASC LIMIT %d OFFSET %d;", condition, search.Limit, search.Offset)
+		query = fmt.Sprintf("SELECT A.title, A.endat FROM Ad A LEFT OUTER JOIN Country C ON C.id = A.id %s ORDER BY A.endat ASC LIMIT %d OFFSET %d;", condition, search.Limit, search.Offset)
 	} else {
 		query = fmt.Sprintf("SELECT A.title, A.endat FROM Ad A %s ORDER BY A.endat ASC LIMIT %d OFFSET %d;", condition, search.Limit, search.Offset)
 	}
