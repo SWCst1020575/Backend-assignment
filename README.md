@@ -56,12 +56,12 @@ make test_get
 
 ## Conclusion and Future work
 1. 我在要求的功能上皆能正常運作
-2. 但在壓力測試中，我自己的環境裡，1000筆資料中，對get method只能跑出大約2300次/s多的效能，而且若user太多，server也會自行reject掉request。
+2. 但在壓力測試中，我自己的環境裡，1000筆資料中，對get method只能跑出大約2500次/s多的效能，而且若user太多，server也會自行reject掉request。
    
    如果要嘗試改善的話，我想能透過Redis來做資料cache。我的測試資料是隨機生成，但實際情況，資料從database讀取有相當大的locality，像是EndAt多半會使用較接近現在時間的。這樣能大幅減少access disk的時間。甚至在資料不大的情況，其實可以直接全部使用Redis會有最快的速度。
    
    此外，在實際佈署時，可以使用kubernetes之類的工具去做load balance，根據資料範圍，像是國家，年齡區間等分散到不同的節點上，然後節點上再做cache，我認為能大幅提升效能。
-![](img/pressure_test.png) (同時 50 users)
+![](img/pressure_test.png) (同時 100 users)
 3. 在簡化指令操作上，我簡單的使用make來代替，若在實際專案，可透過Ansible之類的工具來強化CI的功能性
 
 ## 環境設定
@@ -100,6 +100,11 @@ CREATE TABLE Country (
     Country char(2),
     PRIMARY KEY (ID, Country)
 );
+CREATE INDEX country_index ON Country USING HASH (country);
+CREATE INDEX ad_agestart_index ON Ad USING BTREE (agestart);
+CREATE INDEX ad_ageend_index ON Ad USING BTREE (ageend);
+CREATE INDEX ad_endat_index ON Ad USING BTREE (endat);
+CREATE INDEX ad_startat_index ON Ad USING BTREE (startat);
 ```
 
 ## 範例request

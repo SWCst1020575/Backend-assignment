@@ -32,37 +32,46 @@ func GetDBconnection() *sql.DB {
 }
 
 // Constant: The query string to create table in database.
-const initCreateTableQuery1 = `CREATE TABLE Ad (
-    							ID SERIAL PRIMARY KEY,
-    							Title text NOT NULL,
-								StartAt timestamp NOT NULL,
-								EndAt timestamp NOT NULL,
-								AgeStart int,
-								AgeEnd int,
-								Male boolean,
-								Female boolean,
-								PlatformAndroid boolean,
-								PlatformIos boolean,
+var initCreateTableQuery = [7]string{
+	`CREATE TABLE Ad (
+    	ID SERIAL PRIMARY KEY,
+    	Title text NOT NULL,
+		StartAt timestamp NOT NULL,
+		EndAt timestamp NOT NULL,
+		AgeStart int,
+		AgeEnd int,
+		Male boolean,
+		Female boolean,
+		PlatformAndroid boolean,
+		PlatformIos boolean,
 								PlatformWeb boolean
-							);`
-const initCreateTableQuery2 = `CREATE TABLE Country (
-    							ID int NOT NULL references Ad(ID),
-								Country char(2)
-							);`
+	);`,
+	`CREATE TABLE Country (
+    	ID int NOT NULL references Ad(ID),
+		Country char(2)
+	);`,
+	"CREATE INDEX country_index ON Country USING HASH (country);",
+	"CREATE INDEX ad_agestart_index ON Ad USING BTREE (agestart);",
+	"CREATE INDEX ad_agestart_index ON Ad USING BTREE (ageend);",
+	"CREATE INDEX ad_endat_index ON Ad USING BTREE (endat);",
+	"CREATE INDEX ad_startat_index ON Ad USING BTREE (startat);"}
 
 // Function: Check if ad table exists.
 func checkTableExist() {
-	_, check := dbConnection.Query("SELECT * FROM Ad;")
-	if check != nil {
-		_, err := dbConnection.Exec(initCreateTableQuery1)
-		CheckError(err)
 
-		fmt.Println("Create Ad table.")
+	for i := 0; i < 7; i++ {
+		var check error
+		if i == 0 {
+			_, check = dbConnection.Query("SELECT * FROM Ad;")
+		}
+		if i == 1 {
+			_, check = dbConnection.Query("SELECT * FROM Country;")
+		}
+		if check != nil {
+			_, err := dbConnection.Exec(initCreateTableQuery[i])
+			CheckError(err)
+			fmt.Println("Create.")
+		}
 	}
-	_, check = dbConnection.Query("SELECT * FROM Country;")
-	if check != nil {
-		_, err := dbConnection.Exec(initCreateTableQuery2)
-		CheckError(err)
-		fmt.Println("Create Country table.")
-	}
+
 }

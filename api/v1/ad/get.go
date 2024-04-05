@@ -119,7 +119,7 @@ func getFormatError(w http.ResponseWriter) {
 
 // Function: Parse query string.
 func parseQuery(search *SearchAd) string {
-	condition := "WHERE NOW()>startat"
+	condition := "WHERE NOW()>startat AND NOW()<endat"
 	if search.Age != 0 {
 		condition += fmt.Sprintf(" AND ((A.agestart <= %d AND A.ageend >= %d) OR (A.agestart = 0 AND A.ageend = 0))", search.Age, search.Age)
 	}
