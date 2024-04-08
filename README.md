@@ -59,7 +59,8 @@ make test_post
 ```sh
 make test_get
 ```
-在get當中，先隨機生成數筆資料，post到資料庫當中，再根據幾筆測試資料，查看回傳items正確與否，不合法皆回傳空items。
+- 在get當中，先隨機生成數筆資料，post到資料庫當中，再根據幾筆測試資料，查看回傳items正確與否，不合法皆回傳空items。
+- 因為get會根據當時時間取得資料，測試時需確保expect output是否正確
 
 ## Conclusion and Future work
 1. 我在要求的功能上皆能正常運作
